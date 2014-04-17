@@ -93,6 +93,8 @@ class LanguagePack::Ruby < LanguagePack::Base
         build_bundler
         create_database_yml
         install_binaries
+        run_rake_db_migrate_rake_task
+        run_rake_db_seed_rake_task
         run_assets_precompile_rake_task
       end
       super
@@ -697,7 +699,37 @@ params = CGI.parse(uri.query || "")
   def node_js_installed?
     @node_js_installed ||= run("#{node_bp_bin_path}/node -v") && $?.success?
   end
-
+  
+  def run_rake_db_seed_rake_task
+      instrument 'ruby.run_db_seed_rake_task' do
+        seed = rake.task("db:seed")
+        return true unless seed.is_defined?
+        
+        topic "Seeding Database"
+        seed.invoke(env: rake_env)
+        if seed.success?
+          puts "Seed  completed (#{"%.2f" % seed.time}s)"
+        
+        else
+          puts "Seed Failed"
+        end
+      end
+  end
+  
+  def run_rake_db_migrate_rake_task
+      instrument 'ruby.run_db_migrate_rake_task' do
+        migrate = rake.task("db:migrate")
+        return true unless migrate.is_defined?
+        
+        topic "Migrating Database"
+        migrate.invoke(env: rake_env)
+        if migrate.success?
+          puts "Migration completed (#{"%.2f" % migrate.time}s)"
+        else
+          puts "Migration Failed"
+        end
+      end
+  end
   def run_assets_precompile_rake_task
     instrument 'ruby.run_assets_precompile_rake_task' do
 
