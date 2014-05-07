@@ -95,6 +95,7 @@ class LanguagePack::Ruby < LanguagePack::Base
         install_binaries
         run_rake_db_migrate_rake_task
         run_rake_db_seed_rake_task
+        run_rake_sitemap_generate_task
         run_assets_precompile_rake_task
       end
       super
@@ -716,6 +717,21 @@ params = CGI.parse(uri.query || "")
       end
   end
   
+  def run_rake_sitemap_generate_task
+      instrument 'ruby.run_rake_sitemap_generate_task' do
+        sitemap = rake.task("sitemap:generate")
+        return true unless sitemap.is_defined?
+        
+        topic "Creating Sitemap"
+        sitemap.invoke(env: rake_env)
+        if sitemap.success?
+          puts "Sitemap  completed (#{"%.2f" % sitemap.time}s)"
+        else
+          puts "Sitemap Failed"
+        end
+      end
+  end
+  
   def run_rake_db_migrate_rake_task
       instrument 'ruby.run_db_migrate_rake_task' do
         migrate = rake.task("db:migrate")
@@ -730,6 +746,7 @@ params = CGI.parse(uri.query || "")
         end
       end
   end
+  
   def run_assets_precompile_rake_task
     instrument 'ruby.run_assets_precompile_rake_task' do
 
