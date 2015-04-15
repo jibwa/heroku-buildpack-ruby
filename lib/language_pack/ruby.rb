@@ -491,9 +491,9 @@ ERROR
 			puts "Removing app/assets folder"
       FileUtils.rm_rf("app/assets")
     end
-    if File.exists?("public/assets")
-			puts "Removing pubic/assets folder"
-      FileUtils.rm_rf("public/assets")
+    if File.exists?("public/assets/sounds")
+			puts "Removing pubic/assets/sounds folder"
+      FileUtils.rm_rf("public/assets/sounds")
     end
   end
 
