@@ -94,8 +94,8 @@ class LanguagePack::Ruby < LanguagePack::Base
         create_database_yml
         install_binaries
         run_assets_precompile_rake_task
-				delete_app_assets
       end
+			delete_app_assets
       super
     end
   end
@@ -488,13 +488,12 @@ ERROR
 
   def delete_app_assets
     if File.exists?("app/assets")
-      warn(<<WARNING)
-Removing `vendor/bundle`.
-Checking in `vendor/bundle` is not supported. Please remove this directory
-and add it to your .gitignore. To vendor your gems with Bundler, use
-`bundle pack` instead.
-WARNING
+			puts "Removing app/assets folder"
       FileUtils.rm_rf("app/assets")
+    end
+    if File.exists?("public/assets")
+			puts "Removing pubic/assets folder"
+      FileUtils.rm_rf("public/assets")
     end
   end
 
