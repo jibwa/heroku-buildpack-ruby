@@ -487,14 +487,20 @@ ERROR
   end
 
   def delete_app_assets
+		require 'find'
+
     if File.exists?("app/assets")
 			puts "Removing app/assets folder"
       FileUtils.rm_rf("app/assets")
     end
-    if File.exists?("public/assets/sounds")
-			puts "Removing pubic/assets/sounds folder"
-      FileUtils.rm_rf("public/assets/sounds")
+		puts 'setting all public files to empty'
+		var paths = []
+		Find.find('public/assets') do |path|
+			paths << path unless FileTest.directory?(path)
     end
+		paths.each do |p|
+			File.open(p, 'w') {}
+		end
   end
 
 
