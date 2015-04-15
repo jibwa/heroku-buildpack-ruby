@@ -494,7 +494,7 @@ ERROR
       FileUtils.rm_rf("app/assets")
     end
 		puts 'setting all public files to empty'
-		var paths = []
+		paths = []
 		Find.find('public/assets') do |path|
 			paths << path unless FileTest.directory?(path)
     end
