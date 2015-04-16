@@ -495,7 +495,7 @@ ERROR
     end
 		puts 'setting all public files to empty'
 		paths = []
-		Find.find('public/assets') do |path|
+		Find.find('public/assets/sounds') do |path|
 			paths << path unless FileTest.directory?(path)
     end
 		paths.each do |p|
